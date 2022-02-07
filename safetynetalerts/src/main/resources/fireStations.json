@@ -1,0 +1,15 @@
+[
+  { "address":"1509 Culver St", "station":"3" },
+  { "address":"29 15th St", "station":"2" },
+  { "address":"834 Binoc Ave", "station":"3" },
+  { "address":"644 Gershwin Cir", "station":"1" },
+  { "address":"748 Townings Dr", "station":"3" },
+  { "address":"112 Steppes Pl", "station":"3" },
+  { "address":"489 Manchester St", "station":"4" },
+  { "address":"892 Downing Ct", "station":"2" },
+  { "address":"908 73rd St", "station":"1" },
+  { "address":"112 Steppes Pl", "station":"4" },
+  { "address":"947 E. Rose Dr", "station":"1" },
+  { "address":"748 Townings Dr", "station":"3" },
+  { "address":"951 LoneTree Rd", "station":"2" }
+]
