@@ -9,22 +9,20 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @Service
 public class JSONReaderService {
 
-    public JSONReaderRepository() throws IOException {}
+    public JSONReaderService() throws IOException {}
 
     //private final static ObjectMapper mapper = new ObjectMapper();
     //JsonNode node = mapper.readTree(Paths.get("src/main/resources/Data.json").toFile());
@@ -33,7 +31,7 @@ public class JSONReaderService {
     private IPersonRepository personRepository;
 
     @Autowired
-    private IFirestationReposioty firestationRepository;
+    private IFirestationRepository firestationRepository;
 
     @Autowired
     private IMedicalRecordRepository medicalRepository;
@@ -48,12 +46,11 @@ public class JSONReaderService {
             JsonNode node = mapper.readTree(new FileInputStream(filePath));
             loadPersons(node);
             loadFirestation(node);
-            loadMedical(node)
+            loadMedical(node);
         }
-
     }
 
-    public void loadPersons(Json node) {
+    public void loadPersons(JsonNode node) {
         JsonNode persons = node.path("persons");
 
         for (JsonNode nodePerson : persons) {

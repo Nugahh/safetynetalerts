@@ -1,15 +1,11 @@
 package com.example.safetynetalerts.repository;
 
-import com.example.safetynetalerts.DAO.DataBaseDAO;
 import com.example.safetynetalerts.model.FireStation;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
 public class FireStationRepository extends JSONReaderRepository {

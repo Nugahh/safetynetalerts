@@ -1,17 +1,13 @@
 package com.example.safetynetalerts.repository;
 
-import com.example.safetynetalerts.DAO.DataBaseDAO;
 import com.example.safetynetalerts.model.Person;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
-public class PersonRepository extends JSONReaderRepository {
+public class PersonRepository extends JSONReaderService {
 
     private ArrayList<Person> personList = new ArrayList<>();
 

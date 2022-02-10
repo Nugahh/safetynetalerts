@@ -2,8 +2,6 @@ package com.example.safetynetalerts.service;
 
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.repository.PersonRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

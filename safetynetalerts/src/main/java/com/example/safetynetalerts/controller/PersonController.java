@@ -5,6 +5,8 @@ import com.example.safetynetalerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,8 +28,8 @@ public class PersonController {
     }
 
     @GetMapping(value ="/person/{name}")
-    public Person getPersonByName(@PathVariable String name) throws IOException {
+    public ResponseEntity<Person> getPerson(String name) throws IOException {
         Person person = personService.findPerson(name);
-        return person;
+        return ResponseEntity.status(HttpStatus.OK).body(person);
     }
 }

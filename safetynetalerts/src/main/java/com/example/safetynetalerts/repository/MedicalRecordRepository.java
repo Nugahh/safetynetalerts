@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @Repository
-public class MedicalRecordRepository extends JSONReaderRepository  {
+public class MedicalRecordRepository{
 
     public MedicalRecordRepository() throws IOException {
     }
