@@ -1,22 +1,16 @@
-package com.example.safetynetalerts.model;
+package com.example.safetynetalerts.DTO;
 
 import java.util.List;
 
-public class MedicalRecord {
+public class floodDTO {
 
-    private String firstName;
     private String lastName;
-    private String birthdate;
+    private String address;
+    private String phone;
+    private Integer age;
+
     private List<String> medications;
     private List<String> allergies;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
 
     public String getLastName() {
         return lastName;
@@ -26,12 +20,20 @@ public class MedicalRecord {
         this.lastName = lastName;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getAddress() {
+        return address;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public List<String> getMedications() {

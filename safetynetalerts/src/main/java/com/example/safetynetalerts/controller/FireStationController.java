@@ -2,24 +2,19 @@ package com.example.safetynetalerts.controller;
 
 import com.example.safetynetalerts.model.FireStation;
 import com.example.safetynetalerts.service.FireStationService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+@RestController
 public class FireStationController {
 
     @Autowired
     FireStationService fireStationService;
 
     @GetMapping(value = "/firestation")
-    public HashMap<Integer, FireStation> getFireStation() throws JsonProcessingException {
-        HashMap<Integer, FireStation>fireStationList = fireStationService.getFireStation();
-        return fireStationList;
+    public List<FireStation> getFireStation() {
+        return fireStationService.getFireStation();
     }
-
 }

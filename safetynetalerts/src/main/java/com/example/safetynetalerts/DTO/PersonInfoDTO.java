@@ -1,12 +1,14 @@
-package com.example.safetynetalerts.model;
+package com.example.safetynetalerts.DTO;
 
 import java.util.List;
 
-public class MedicalRecord {
+public class PersonInfoDTO {
 
     private String firstName;
     private String lastName;
-    private String birthdate;
+    private String email;
+    private Integer age;
+
     private List<String> medications;
     private List<String> allergies;
 
@@ -26,12 +28,20 @@ public class MedicalRecord {
         this.lastName = lastName;
     }
 
-    public String getBirthdate() {
-        return birthdate;
+    public String getEmail() {
+        return email;
     }
 
-    public void setBirthdate(String birthdate) {
-        this.birthdate = birthdate;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public List<String> getMedications() {

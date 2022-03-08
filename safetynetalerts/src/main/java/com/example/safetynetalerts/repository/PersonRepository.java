@@ -1,53 +1,82 @@
 package com.example.safetynetalerts.repository;
 
 import com.example.safetynetalerts.model.Person;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class PersonRepository extends JSONReaderService {
+public class PersonRepository implements CrudRepository<Person, String> {
 
-    private ArrayList<Person> personList = new ArrayList<>();
+    private List<Person> personList = new ArrayList<>();
 
-    public PersonRepository() throws IOException {
+    @Override
+    public <S extends Person> S save(S entity) {
+        List<Person> addPersonList = this.findAll();
+        addPersonList.add(entity);
+        return entity;
     }
 
-    public ArrayList<Person> getPersonList () throws IOException {
-        return this.readPersonList();
+    @Override
+    public <S extends Person> Iterable<S> saveAll(Iterable<S> entities) {
+        return null;
     }
 
-    public ArrayList<Person> addPerson(Person person) throws IOException {
-        ArrayList<Person> addPersonList = getPersonList();
-        addPersonList.add(person);
-        return addPersonList;
+    @Override
+    public Optional<Person> findById(String s) {
+        return this.findAll().stream()
+                .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s))
+                .findAny();
     }
 
-    public ArrayList<Person> deletePerson(Person person) throws IOException {
-        ArrayList<Person> deletePersonOfList = getPersonList();
-        deletePersonOfList.remove(person);
-        return deletePersonOfList;
+    @Override
+    public boolean existsById(String s) {
+        return false;
     }
 
-    public Person updatePerson(Person person,String name) throws IOException {
-        ArrayList<Person> updateAPerson = getPersonList();
-        for (int i = 0; i < updateAPerson.size(); i++) {
-            if (updateAPerson.get(i).getFirstName().contains(name)) {
-                updateAPerson.set(i, person);
+    @Override
+    public List<Person> findAll() {
+        return this.personList;
+    }
+
+    @Override
+    public Iterable<Person> findAllById(Iterable<String> strings) {
+        return null;
+    }
+
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public void deleteById(String s) {
+        this.findAll().forEach((Person person) -> {
+            if((person.getLastName() + person.getFirstName()).equals(s)){
+                this.findAll().remove(person);
             }
-            return updateAPerson.get(i);
-        }
-        return updatePerson(person,name);
+        });
     }
 
-    public Person findPerson(String name) throws IOException {
-        ArrayList<Person> personListByName = getPersonList();
-        for (Person personFind : personListByName) {
-            if (personFind.getFirstName().contains(name)) {
-                return personFind;
-            }
-        }
-        return findPerson(name);
+    @Override
+    public void delete(Person entity) {
+        this.findAll().remove(entity);
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends String> strings) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends Person> entities) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+
     }
 }

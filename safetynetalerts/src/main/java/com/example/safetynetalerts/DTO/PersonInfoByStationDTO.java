@@ -1,19 +1,23 @@
-package com.example.safetynetalerts.model;
+package com.example.safetynetalerts.DTO;
 
-import lombok.Data;
-
-import java.util.ArrayList;
 import java.util.List;
 
-public class Person {
+public class PersonInfoByStationDTO {
 
+    private String station;
     private String firstName;
     private String lastName;
     private String address;
-    private String city;
-    private String zip;
     private String phone;
-    private String email;
+
+
+    public String getStation() {
+        return station;
+    }
+
+    public void setStation(String station) {
+        this.station = station;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -39,35 +43,11 @@ public class Person {
         this.address = address;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
