@@ -1,5 +1,6 @@
 package com.example.safetynetalerts.repository;
 
+import com.example.safetynetalerts.DTO.PersonInfoDTO;
 import com.example.safetynetalerts.model.Person;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public class PersonRepository implements CrudRepository<Person, String> {
 
     private List<Person> personList = new ArrayList<>();
+    private List<PersonInfoDTO> personInfoList = new ArrayList<>();
 
     @Override
     public <S extends Person> S save(S entity) {

@@ -6,6 +6,7 @@ public class PersonInfoDTO {
 
     private String firstName;
     private String lastName;
+    private String address;
     private String email;
     private Integer age;
 
@@ -26,6 +27,14 @@ public class PersonInfoDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getEmail() {
