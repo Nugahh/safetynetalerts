@@ -10,13 +10,13 @@ public class MapperUtils {
 
     public PersonInfoDTO toPersonDTO(Person person, MedicalRecord medicalRecord) {
 
-        PersonInfoDTO personDTO = new PersonInfoDTO();
-        personDTO.setLastName(person.getLastName());
-        personDTO.setAddress(person.getAddress());
-        personDTO.setEmail(person.getEmail());
-        personDTO.setMedications(medicalRecord.getMedications());
-        personDTO.setAllergies(medicalRecord.getAllergies());
+        PersonInfoDTO personInfoDTO = new PersonInfoDTO();
+        personInfoDTO.setLastName(person.getLastName());
+        personInfoDTO.setAddress(person.getAddress());
+        personInfoDTO.setEmail(person.getEmail());
+        personInfoDTO.setMedications(medicalRecord.getMedications());
+        personInfoDTO.setAllergies(medicalRecord.getAllergies());
 
-        return personDTO;
+        return personInfoDTO;
     }
 }

@@ -58,7 +58,7 @@ public class JSONReaderService {
             person.setPhone(nodePerson.path("phone").asText());
             person.setEmail(nodePerson.path("email").asText());
 
-            personRepository.save(person);
+            personRepository.addPerson(person);
         }
     }
 
@@ -101,7 +101,7 @@ public class JSONReaderService {
             medicalRecord.setAllergies(currentAllergies);
             medicalRecord.setMedications(currentMedications);
 
-            medicalRepository.save(medicalRecord);
+            medicalRepository.addMedicalRecord(medicalRecord);
         }
     }
 }

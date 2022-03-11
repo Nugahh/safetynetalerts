@@ -1,84 +1,57 @@
 package com.example.safetynetalerts.repository;
 
-import com.example.safetynetalerts.DTO.PersonInfoDTO;
 import com.example.safetynetalerts.model.Person;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
-public class PersonRepository implements CrudRepository<Person, String> {
+public class PersonRepository{
 
     private List<Person> personList = new ArrayList<>();
-    private List<PersonInfoDTO> personInfoList = new ArrayList<>();
 
-    @Override
-    public <S extends Person> S save(S entity) {
-        List<Person> addPersonList = this.findAll();
-        addPersonList.add(entity);
-        return entity;
+    public Person addPerson(Person person){
+        this.personList.add(person);
+        return person;
     }
-
-    @Override
-    public <S extends Person> Iterable<S> saveAll(Iterable<S> entities) {
-        return null;
-    }
-
-    @Override
-    public Optional<Person> findById(String s) {
-        return this.findAll().stream()
-                .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s))
-                .findAny();
-    }
-
-    @Override
-    public boolean existsById(String s) {
-        return false;
-    }
-
-    @Override
     public List<Person> findAll() {
         return this.personList;
     }
 
-    @Override
-    public Iterable<Person> findAllById(Iterable<String> strings) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(String s) {
+    public void deleteByFirstNameAndLastName(String firstName, String lastName) {
         this.findAll().forEach((Person person) -> {
-            if((person.getLastName() + person.getFirstName()).equals(s)){
-                this.findAll().remove(person);
+            if((person.getLastName().equals(lastName) && person.getFirstName().equals(firstName))){
+                this.personList.remove(person);
             }
         });
     }
 
-    @Override
-    public void delete(Person entity) {
-        this.findAll().remove(entity);
+    public List<Person> findById(String s) {
+        return this.findAll().stream()
+                .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s))
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public void deleteAllById(Iterable<? extends String> strings) {
-
+    public List<Person> findByFirstName(String firstName){
+        return this.findAll().stream()
+                .filter((person -> person.getFirstName().equals(firstName)))
+                .collect(Collectors.toList());
     }
 
-    @Override
-    public void deleteAll(Iterable<? extends Person> entities) {
-
+    public List<Person> findByLastName(String lastName){
+        return this.findAll().stream()
+                .filter((person -> person.getLastName().equals(lastName)))
+                .collect(Collectors.toList());
     }
-
-    @Override
-    public void deleteAll() {
-
+    public List<String> findAllEmail(){
+        return this.findAll().stream()
+                .map(Person::getEmail)
+                .collect(Collectors.toList());
+    }
+    public String findAllFirstName(){
+        return this.findAll().stream()
+                .map(Person::getFirstName)
+                .collect(Collectors.joining());
     }
 }

@@ -19,17 +19,32 @@ public class PersonController {
     PersonService personService;
 
     @GetMapping(value ="/person")
-    public List<Person> getPersons() throws IOException {
+    public List<Person> getPersons() {
         return personService.getPersons();
     }
 
-   /* @GetMapping(value ="/person/{name}")
+    @PostMapping(value ="/person")
+    public Person addPerson(@RequestBody Person person){
+        return personService.addPerson(person);
+    }
+
+    @PutMapping(value ="/person")
+    public Person updatePerson(@RequestBody Person person){
+        return personService.addPerson(person);
+    }
+
+    /*@DeleteMapping(value ="/person")
+    public ResponseEntity<Person> getPersons(String firstName, String lastName) throws IOException {
+        return personService.deletePerson(firstName, lastName);*/
+//        return ResponseEntity.status(HttpStatus.OK).body(person);
+
+    /*@GetMapping(value ="/person/{name}")
     public ResponseEntity<Person> getPersons(String name) throws IOException {
         Person person = personService.findPerson(name);
         return ResponseEntity.status(HttpStatus.OK).body(person);
     }*/
    /* @PostMapping(value ="/person/{name}")
     @PutMapping(value ="/person")
-    @DeleteMapping*/
 
+*/
 }
