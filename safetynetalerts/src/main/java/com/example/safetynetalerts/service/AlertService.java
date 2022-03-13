@@ -7,6 +7,7 @@ import com.example.safetynetalerts.utils.MapperUtils;
 import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +24,19 @@ public class AlertService {
     @Autowired
     private MedicalRecordService medicalRecordService;
 
-    public List<PersonInfoDTO>  toPersonInfo(Optional<String> firstName, Optional<String> lastName) {
+    @Autowired
+    private MapperUtils mapperUtils;
+
+    public List<PersonInfoDTO>  toPersonInfo(String firstName, String lastName) {
         List<Person> persons = personService.searchPerson(firstName, lastName);
         List<MedicalRecord> medicalRecordList = medicalRecordService.getMedicalRecords(firstName, lastName);
 
-        return persons.stream().map(p -> {
-            PersonInfoDTO personInfoDTO = new PersonInfoDTO();
-            Optional<MedicalRecord> medicalRecordByPerson = medicalRecordList.stream()
-                    .filter(record -> record.getFirstName().equals(p.getFirstName())
-                            && record.getLastName().equals(p.getLastName())).findFirst();
-            if (medicalRecordByPerson.isPresent()) {
-                personInfoDTO.setMedications(medicalRecordByPerson.get().getMedications());
-                personInfoDTO.setAllergies(medicalRecordByPerson.get().getAllergies());
-            }
-            personInfoDTO.setLastName(p.getLastName());
-            personInfoDTO.setAddress(p.getAddress());
-            personInfoDTO.setEmail(p.getEmail());
-            System.out.println(personInfoDTO);
-            System.out.println(medicalRecordByPerson);
-            System.out.println(persons);
-            return personInfoDTO;
-        }).collect(Collectors.toList());
+        return persons.stream()
+                .map(p -> {
+                    List<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecords(persons);
+                    return mapperUtils.toPersonDTO(persons, medicalRecord)
+                })
+                .collect(Collectors.toList());
+
     }
 }

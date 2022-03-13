@@ -5,6 +5,8 @@ import com.example.safetynetalerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,25 +20,25 @@ public class PersonController {
     @Autowired
     PersonService personService;
 
-    @GetMapping(value ="/person")
+    @GetMapping(value = "/person")
     public List<Person> getPersons() {
         return personService.getPersons();
     }
 
-    @PostMapping(value ="/person")
-    public Person addPerson(@RequestBody Person person){
+    @PostMapping(value = "/person")
+    public Person addPerson(@RequestBody Person person) {
         return personService.addPerson(person);
     }
 
-    @PutMapping(value ="/person")
-    public Person updatePerson(@RequestBody Person person){
+    @PutMapping(value = "/person")
+    public Person updatePerson(@RequestBody Person person) {
         return personService.addPerson(person);
     }
 
-    /*@DeleteMapping(value ="/person")
-    public ResponseEntity<Person> getPersons(String firstName, String lastName) throws IOException {
-        return personService.deletePerson(firstName, lastName);*/
-//        return ResponseEntity.status(HttpStatus.OK).body(person);
+    @DeleteMapping(value = "/person")
+    public ResponseEntity<String> getPersons(String firstName, String lastName) throws IOException {
+        personService.deletePerson(firstName, lastName);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("La personne a été supprimée");
 
     /*@GetMapping(value ="/person/{name}")
     public ResponseEntity<Person> getPersons(String name) throws IOException {
@@ -47,4 +49,5 @@ public class PersonController {
     @PutMapping(value ="/person")
 
 */
+    }
 }

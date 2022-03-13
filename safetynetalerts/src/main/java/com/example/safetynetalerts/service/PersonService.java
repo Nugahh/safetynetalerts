@@ -31,18 +31,17 @@ public class PersonService {
 
     public Person addPerson(Person person){
         return personRepository.addPerson(person);
-
     }
 
-    public List<Person> searchPerson(Optional<String> firstName, Optional<String> lastName){
-        if (firstName.isPresent() && lastName.isPresent()){
-            return personRepository.findById(lastName.get() + firstName.get());
+    public List<Person> searchPerson(String firstName, String lastName){
+        if (!firstName.isEmpty() && !lastName.isEmpty()){
+            return personRepository.findById(lastName+ firstName);
         }
-        if (firstName.isPresent()){
-            return personRepository.findByFirstName(firstName.get());
+        if (!firstName.isEmpty()){
+            return personRepository.findByFirstName(firstName);
         }
-        if (lastName.isPresent()){
-            return personRepository.findByLastName(lastName.get());
+        if (!lastName.isEmpty()){
+            return personRepository.findByLastName(lastName);
         }
         return personRepository.findAll();
     }

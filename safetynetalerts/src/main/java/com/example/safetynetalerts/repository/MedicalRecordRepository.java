@@ -22,7 +22,7 @@ public class MedicalRecordRepository {
 
 
     public List<MedicalRecord> findBy(String s) {
-        return this.findAll().stream()
+        return this.medicalRecordList.stream()
                 .filter((p) -> (p.getLastName() + p.getFirstName()).equals(s))
                 .collect(Collectors.toList());
     }
@@ -32,19 +32,19 @@ public class MedicalRecordRepository {
     }
 
     public List<MedicalRecord> findByFirstName(String firstName){
-        return this.findAll().stream()
+        return this.medicalRecordList.stream()
                 .filter((person -> person.getFirstName().equals(firstName)))
                 .collect(Collectors.toList());
     }
 
     public List<MedicalRecord> findByLastName(String lastName){
-        return this.findAll().stream()
+        return this.medicalRecordList.stream()
                 .filter((person -> person.getLastName().equals(lastName)))
                 .collect(Collectors.toList());
     }
 
     public void deleteByFirstNameAndLastName(String firstName, String lastName) {
-        this.findAll().forEach((MedicalRecord medicalRecord) -> {
+        this.medicalRecordList.forEach((MedicalRecord medicalRecord) -> {
             if((medicalRecord.getLastName().equals(lastName) && medicalRecord.getFirstName().equals(firstName))){
                 this.medicalRecordList.remove(medicalRecord);
             }

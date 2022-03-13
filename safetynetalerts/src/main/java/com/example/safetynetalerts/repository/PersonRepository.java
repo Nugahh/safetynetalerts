@@ -20,7 +20,7 @@ public class PersonRepository{
     }
 
     public void deleteByFirstNameAndLastName(String firstName, String lastName) {
-        this.findAll().forEach((Person person) -> {
+        this.personList.forEach((Person person) -> {
             if((person.getLastName().equals(lastName) && person.getFirstName().equals(firstName))){
                 this.personList.remove(person);
             }
@@ -28,29 +28,29 @@ public class PersonRepository{
     }
 
     public List<Person> findById(String s) {
-        return this.findAll().stream()
+        return this.personList.stream()
                 .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s))
                 .collect(Collectors.toList());
     }
 
     public List<Person> findByFirstName(String firstName){
-        return this.findAll().stream()
+        return this.personList.stream()
                 .filter((person -> person.getFirstName().equals(firstName)))
                 .collect(Collectors.toList());
     }
 
     public List<Person> findByLastName(String lastName){
-        return this.findAll().stream()
+        return this.personList.stream()
                 .filter((person -> person.getLastName().equals(lastName)))
                 .collect(Collectors.toList());
     }
     public List<String> findAllEmail(){
-        return this.findAll().stream()
+        return this.personList.stream()
                 .map(Person::getEmail)
                 .collect(Collectors.toList());
     }
     public String findAllFirstName(){
-        return this.findAll().stream()
+        return this.personList.stream()
                 .map(Person::getFirstName)
                 .collect(Collectors.joining());
     }

@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class JSONReaderService {
 
-    public JSONReaderService() throws IOException {}
+    public JSONReaderService() {}
 
     @Autowired
     private PersonRepository personRepository;

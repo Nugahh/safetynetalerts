@@ -1,13 +1,11 @@
 package com.example.safetynetalerts.service;
 
 import com.example.safetynetalerts.model.MedicalRecord;
-import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.repository.MedicalRecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MedicalRecordService {
@@ -23,15 +21,15 @@ public class MedicalRecordService {
         medicalRecordRepository.deleteByFirstNameAndLastName(firstName, lastName);
     }
 
-    public List<MedicalRecord> getMedicalRecords(Optional<String> firstName, Optional<String> lastName){
-        if (firstName.isPresent() && lastName.isPresent()){
-            return medicalRecordRepository.findBy(lastName.get() + firstName.get());
+    public List<MedicalRecord> getMedicalRecords(String firstName, String lastName){
+        if (!firstName.isEmpty() && !lastName.isEmpty()){
+            return medicalRecordRepository.findBy(lastName + firstName);
         }
-        if (firstName.isPresent()){
-            return medicalRecordRepository.findByFirstName(firstName.get());
+        if (!firstName.isEmpty()){
+            return medicalRecordRepository.findByFirstName(firstName);
         }
-        if (lastName.isPresent()){
-            return medicalRecordRepository.findByLastName(lastName.get());
+        if (!lastName.isEmpty()){
+            return medicalRecordRepository.findByLastName(lastName);
         }
         return medicalRecordRepository.findAll();
     }
