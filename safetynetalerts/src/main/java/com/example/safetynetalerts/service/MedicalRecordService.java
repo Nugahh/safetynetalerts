@@ -21,17 +21,11 @@ public class MedicalRecordService {
         medicalRecordRepository.deleteByFirstNameAndLastName(firstName, lastName);
     }
 
-    public List<MedicalRecord> getMedicalRecords(String firstName, String lastName){
+    public MedicalRecord getMedicalRecords(String firstName, String lastName){
         if (!firstName.isEmpty() && !lastName.isEmpty()){
             return medicalRecordRepository.findBy(lastName + firstName);
         }
-        if (!firstName.isEmpty()){
-            return medicalRecordRepository.findByFirstName(firstName);
-        }
-        if (!lastName.isEmpty()){
-            return medicalRecordRepository.findByLastName(lastName);
-        }
-        return medicalRecordRepository.findAll();
+        return null;
     }
 
 

@@ -21,10 +21,9 @@ public class MedicalRecordRepository {
     }
 
 
-    public List<MedicalRecord> findBy(String s) {
+    public MedicalRecord findBy(String s) {
         return this.medicalRecordList.stream()
-                .filter((p) -> (p.getLastName() + p.getFirstName()).equals(s))
-                .collect(Collectors.toList());
+                .filter((p) -> (p.getLastName() + p.getFirstName()).equals(s)).findAny().orElseThrow();
     }
 
     public List<MedicalRecord> findAll() {

@@ -4,14 +4,11 @@ import com.example.safetynetalerts.DTO.PersonInfoDTO;
 import com.example.safetynetalerts.model.MedicalRecord;
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.utils.MapperUtils;
-import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,15 +25,13 @@ public class AlertService {
     private MapperUtils mapperUtils;
 
     public List<PersonInfoDTO>  toPersonInfo(String firstName, String lastName) {
-        List<Person> persons = personService.searchPerson(firstName, lastName);
-        List<MedicalRecord> medicalRecordList = medicalRecordService.getMedicalRecords(firstName, lastName);
+        Person persons = personService.searchPerson(firstName, lastName);
+        MedicalRecord medicalRecordList = medicalRecordService.getMedicalRecords(firstName, lastName);
 
-        return persons.stream()
+        return personService.searchPersonByLastName(lastName).stream()
                 .map(p -> {
-                    List<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecords(persons);
-                    return mapperUtils.toPersonDTO(persons, medicalRecord)
-                })
-                .collect(Collectors.toList());
-
+                    MedicalRecord mr = medicalRecordService.getMedicalRecords(p.getFirstName(), p.getLastName());
+                    return mapperUtils.toPersonDTO(p, mr);
+                }).collect(Collectors.toList()) ;
     }
 }

@@ -33,16 +33,13 @@ public class PersonService {
         return personRepository.addPerson(person);
     }
 
-    public List<Person> searchPerson(String firstName, String lastName){
-        if (!firstName.isEmpty() && !lastName.isEmpty()){
-            return personRepository.findById(lastName+ firstName);
+    public Person searchPerson(String firstName, String lastName) {
+        if (!firstName.isEmpty() && !lastName.isEmpty()) {
+            return personRepository.findById(lastName + firstName);
         }
-        if (!firstName.isEmpty()){
-            return personRepository.findByFirstName(firstName);
-        }
-        if (!lastName.isEmpty()){
-            return personRepository.findByLastName(lastName);
-        }
-        return personRepository.findAll();
+        return null;
+    }
+    public List<Person> searchPersonByLastName(String lastName){
+        return personRepository.findByLastName(lastName);
     }
 }

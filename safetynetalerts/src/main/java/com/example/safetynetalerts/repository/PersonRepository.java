@@ -4,6 +4,7 @@ import com.example.safetynetalerts.model.Person;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -27,10 +28,9 @@ public class PersonRepository{
         });
     }
 
-    public List<Person> findById(String s) {
+    public Person findById(String s) {
         return this.personList.stream()
-                .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s))
-                .collect(Collectors.toList());
+                .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s)).findAny().orElseThrow();
     }
 
     public List<Person> findByFirstName(String firstName){
