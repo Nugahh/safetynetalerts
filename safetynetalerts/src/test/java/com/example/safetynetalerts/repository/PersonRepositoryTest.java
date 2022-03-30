@@ -1,27 +1,35 @@
 package com.example.safetynetalerts.repository;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.example.safetynetalerts.model.Person;
+import com.example.safetynetalerts.service.JSONReaderService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.ArrayList;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 
 
-/*@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest
 class PersonRepositoryTest {
 
     private PersonRepository personRepository;
     private ArrayList<Person> personList;
-    private JSONReaderRepository jsonReaderRepository;
+    private JSONReaderService jsonReaderService;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        personRepository = new PersonRepository(jsonReaderRepository);
+ /*   @BeforeEach
+    void setUp() {
+        personRepository = new PersonRepository();
         Person person = new Person();
         person.setFirstName("John");
         person.setLastName("Doe");
         personList = new ArrayList<>();
         personList.add(person);
-        when(mockDataBaseDAO.getPersonList()).thenReturn(personList);
     }
 
     @AfterEach
@@ -59,5 +67,5 @@ class PersonRepositoryTest {
     @Test
     void getPersonsTest(){
 
-    }
-}*/
+    }*/
+}

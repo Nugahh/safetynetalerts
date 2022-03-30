@@ -1,10 +1,5 @@
 package com.example.safetynetalerts.model;
 
-import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Person {
 
     private String firstName;

@@ -45,11 +45,11 @@ public class PersonInfoDTO {
         this.email = email;
     }
 
-    public Integer getAge() {
+    public Integer getBirthdate() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setBirthdate(Integer age) {
         this.age = age;
     }
 

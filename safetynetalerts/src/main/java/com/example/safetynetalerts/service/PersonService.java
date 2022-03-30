@@ -2,14 +2,12 @@ package com.example.safetynetalerts.service;
 
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.repository.PersonRepository;
-import com.example.safetynetalerts.utils.MapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class PersonService {
@@ -35,11 +33,25 @@ public class PersonService {
 
     public Person searchPerson(String firstName, String lastName) {
         if (!firstName.isEmpty() && !lastName.isEmpty()) {
-            return personRepository.findById(lastName + firstName);
+            return personRepository.findByLastNameAndFirstName(lastName + firstName);
         }
         return null;
     }
+
     public List<Person> searchPersonByLastName(String lastName){
         return personRepository.findByLastName(lastName);
+    }
+
+    public List<Person> searchEmailByCity(String city){
+       if (!city.isEmpty()) {
+           return personRepository.findByCity(city);
+       }
+        return null;
+    }
+    public List<Person> searchByAddress(String address){
+       if (!address.isEmpty()) {
+           return personRepository.findByAddress(address);
+       }
+        return null;
     }
 }

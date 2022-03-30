@@ -1,10 +1,16 @@
 package com.example.safetynetalerts.DTO;
 
+import com.example.safetynetalerts.model.Person;
+
+import java.util.List;
+
+
 public class ChildAlertDTO {
 
     private String firstName;
     private String lastName;
     private Integer age;
+    private List<Person> family;
 
     public String getFirstName() {
         return firstName;
@@ -22,11 +28,19 @@ public class ChildAlertDTO {
         this.lastName = lastName;
     }
 
-    public Integer getAge() {
+    public Integer getBirthdate() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setBirthdate(Integer age) {
         this.age = age;
+    }
+
+    public List<Person> getFamily() {
+        return family;
+    }
+
+    public void setFamily(List<Person> family) {
+        this.family = family;
     }
 }

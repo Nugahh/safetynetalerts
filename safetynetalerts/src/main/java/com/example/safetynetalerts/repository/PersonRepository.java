@@ -28,15 +28,9 @@ public class PersonRepository{
         });
     }
 
-    public Person findById(String s) {
+    public Person findByLastNameAndFirstName(String s) {
         return this.personList.stream()
                 .filter((Person p) -> (p.getLastName() + p.getFirstName()).equals(s)).findAny().orElseThrow();
-    }
-
-    public List<Person> findByFirstName(String firstName){
-        return this.personList.stream()
-                .filter((person -> person.getFirstName().equals(firstName)))
-                .collect(Collectors.toList());
     }
 
     public List<Person> findByLastName(String lastName){
@@ -44,14 +38,21 @@ public class PersonRepository{
                 .filter((person -> person.getLastName().equals(lastName)))
                 .collect(Collectors.toList());
     }
-    public List<String> findAllEmail(){
+
+    public List<Person> findByCity(String city){
         return this.personList.stream()
-                .map(Person::getEmail)
+                .filter((Person person) -> person.getCity().equals(city))
                 .collect(Collectors.toList());
     }
-    public String findAllFirstName(){
+
+    public List<Person> findByAddress(String address){
+        return this.personList.stream()
+                .filter((person) -> person.getAddress().equals(address))
+                .collect(Collectors.toList());
+    }
+    /*public String findAllFirstName(){
         return this.personList.stream()
                 .map(Person::getFirstName)
                 .collect(Collectors.joining());
-    }
+    }*/
 }

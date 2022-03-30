@@ -1,5 +1,4 @@
 package com.example.safetynetalerts.controller;
-
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
@@ -8,14 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 public class PersonController {
 
-    private final static Logger logger = LogManager.getLogger("PersonController");
+    private final static Logger logger = LogManager.getLogger(PersonController.class);
 
     @Autowired
     PersonService personService;
@@ -36,9 +33,14 @@ public class PersonController {
     }
 
     @DeleteMapping(value = "/person")
-    public ResponseEntity<String> getPersons(String firstName, String lastName) throws IOException {
+    public ResponseEntity<String> deletePerson(String firstName, String lastName) {
         personService.deletePerson(firstName, lastName);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("La personne a été supprimée");
+        if (getPersons().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La personne n'existe pas");
+        } else {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(firstName + " " + lastName + " " + "a été supprimée");
+        }
+
 
     /*@GetMapping(value ="/person/{name}")
     public ResponseEntity<Person> getPersons(String name) throws IOException {
@@ -49,5 +51,6 @@ public class PersonController {
     @PutMapping(value ="/person")
 
 */
+        }
     }
-}
+

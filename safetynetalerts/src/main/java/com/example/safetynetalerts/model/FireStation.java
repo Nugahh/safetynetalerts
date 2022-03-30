@@ -6,7 +6,7 @@ import java.util.List;
 public class FireStation {
 
     private String address;
-    private String station;
+    private Integer station;
 
     public FireStation() {
     }
@@ -19,11 +19,11 @@ public class FireStation {
         this.address = address;
     }
 
-    public String getStation() {
+    public Integer getStation() {
         return station;
     }
 
-    public void setStation(String station) {
+    public void setStation(Integer station) {
         this.station = station;
     }
 }

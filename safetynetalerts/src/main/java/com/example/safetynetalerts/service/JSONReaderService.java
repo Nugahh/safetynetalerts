@@ -69,9 +69,9 @@ public class JSONReaderService {
 
             FireStation fireStation = new FireStation();
             fireStation.setAddress(nodeFireStation.path("address").asText());
-            fireStation.setStation(nodeFireStation.path("station").asText());
+            fireStation.setStation(nodeFireStation.path("station").asInt());
 
-            fireStationRepository.save(fireStation);
+            fireStationRepository.addFireStation(fireStation);
         }
     }
 
