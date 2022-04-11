@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CalculateAge {
 
-    private static final Logger LOGGER = LogManager.getLogger(CalculateAge.class);
+    private static final Logger logger = LogManager.getLogger(CalculateAge.class);
 
     public int calculateAge(String birthdate) {
 
@@ -29,13 +29,13 @@ public class CalculateAge {
             return Period.between(formattedDate, LocalDate.now()).getYears();
 
         } catch (DateTimeParseException parseDateEx) {
-            LOGGER.error("invalid format for birthdate");
+            logger.error("invalid format for birthdate");
             throw parseDateEx;
         } catch (NullPointerException nullBirthdateEx) {
-            LOGGER.error("error : birthdate is null.");
+            logger.error("error : birthdate is null.");
             throw nullBirthdateEx;
         } catch (DateTimeException dateTimeException) {
-            LOGGER.error("error : invalid birthdate.");
+            logger.error("error : invalid birthdate.");
             throw dateTimeException;
         }
     }

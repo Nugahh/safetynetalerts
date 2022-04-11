@@ -1,4 +1,5 @@
 package com.example.safetynetalerts.controller;
+
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.service.PersonService;
 import org.apache.logging.log4j.LogManager;
@@ -7,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 public class PersonController {
@@ -18,39 +18,39 @@ public class PersonController {
     PersonService personService;
 
     @GetMapping(value = "/person")
-    public List<Person> getPersons() {
-        return personService.getPersons();
+    public ResponseEntity<Person> getPersons() {
+        logger.info("List of person generated");
+        return new ResponseEntity(personService.getPersons(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/person")
-    public Person addPerson(@RequestBody Person person) {
-        return personService.addPerson(person);
+    public ResponseEntity<Person> addPerson(@RequestBody Person person) {
+        logger.info("Person created");
+        return new ResponseEntity(personService.addPerson(person), HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/person")
-    public Person updatePerson(@RequestBody Person person) {
-        return personService.addPerson(person);
+    public ResponseEntity<Person> updatePerson(@RequestBody Person person, @RequestParam String firstName, @RequestParam String lastName){
+        if (firstName.isBlank() || lastName.isBlank() || firstName.isEmpty() || lastName.isEmpty()){
+            logger.error("Person not found");
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else{
+            logger.info(firstName + " " + lastName + " " + "has been updated");
+            return new ResponseEntity(personService.updatePerson(person, firstName, lastName), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping(value = "/person")
-    public ResponseEntity<String> deletePerson(String firstName, String lastName) {
-        personService.deletePerson(firstName, lastName);
-        if (getPersons().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("La personne n'existe pas");
-        } else {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(firstName + " " + lastName + " " + "a été supprimée");
+    public ResponseEntity deletePerson(@RequestParam String firstName, @RequestParam String lastName) {
+        if (firstName.isBlank() || lastName.isBlank() || firstName.isEmpty() || lastName.isEmpty()) {
+            logger.error("Firstname or lastname blank");
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        } else{
+            logger.info(firstName + " " + lastName + " " + "has been deleted");
+            personService.deletePerson(firstName, lastName);
         }
-
-
-    /*@GetMapping(value ="/person/{name}")
-    public ResponseEntity<Person> getPersons(String name) throws IOException {
-        Person person = personService.findPerson(name);
-        return ResponseEntity.status(HttpStatus.OK).body(person);
-    }*/
-   /* @PostMapping(value ="/person/{name}")
-    @PutMapping(value ="/person")
-
-*/
-        }
+        return null;
     }
+}
+
 

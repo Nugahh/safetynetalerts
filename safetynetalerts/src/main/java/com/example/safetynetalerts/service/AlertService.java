@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,12 +33,11 @@ public class AlertService {
 
     public List<PersonInfoDTO> toPersonInfo(String firstName, String lastName) {
 
-        return personService.searchPersonByLastName(lastName).stream()
+        return personService.findPersonByLastName(lastName).stream()
                 .map(p -> {
-                    MedicalRecord mr = medicalRecordService.getMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
+                    MedicalRecord mr = medicalRecordService.findMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
                     PersonInfoDTO personInfoDTOList = mapperUtils.toPersonDTO(p, mr);
                     if (p.getFirstName().equals(firstName) && p.getLastName().equals(lastName)) {
-                        LOGGER.info("List of Person generated");
                         personInfoDTOList.setFirstName(firstName);
                     }
                     return personInfoDTOList;
@@ -49,18 +47,18 @@ public class AlertService {
 
     public List<CommunityEmailDTO> toCommunityEmail(String city) {
 
-        return personService.searchEmailByCity(city).stream()
+        return personService.findEmailByCity(city).stream()
                 .map(p -> mapperUtils.toCommunityEmailDTO(p)).collect(Collectors.toList());
     }
 
     public List<FloodDTO> toFlood(List<Integer> stations) {
 
-            return fireStationService.getFireStationByStations(stations).stream()
+            return fireStationService.findFireStationByStations(stations).stream()
                     .map(s -> {
                         FloodDTO flood = new FloodDTO();
-                        List<FloodPersonDTO> floodPersonList = personService.searchByAddress(s.getAddress()).stream()
+                        List<FloodPersonDTO> floodPersonList = personService.findByAddress(s.getAddress()).stream()
                                 .map(p -> {
-                                    MedicalRecord mr = medicalRecordService.getMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
+                                    MedicalRecord mr = medicalRecordService.findMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
                                     FloodPersonDTO floodPerson = new FloodPersonDTO();
                                     floodPerson.setLastName(p.getLastName());
                                     floodPerson.setBirthdate(new CalculateAge().calculateAge(mr.getBirthdate()));
@@ -78,19 +76,19 @@ public class AlertService {
 
     public List<PersonInfoByAddressDTO> toPersonInfoByAddress(String address) {
 
-        return personService.searchByAddress(address).stream()
+        return personService.findByAddress(address).stream()
                 .map(p -> {
-                    FireStation fs = fireStationService.getFireStationByAddressList(p.getAddress());
-                    MedicalRecord mr = medicalRecordService.getMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
+                    FireStation fs = fireStationService.findFireStationByAddressList(p.getAddress());
+                    MedicalRecord mr = medicalRecordService.findMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
                     return mapperUtils.toPersonInfoByAddressDTO(p, mr, fs);
                 }).collect(Collectors.toList());
     }
 
     public List<String> toPhoneAlert(Integer station) {
 
-        return fireStationService.getFireStationByStation(station).stream()
+        return fireStationService.findFireStationByStation(station).stream()
                 .map(FireStation::getAddress)
-                .flatMap(address -> personService.searchByAddress(address).stream()
+                .flatMap(address -> personService.findByAddress(address).stream()
                         .map(Person::getPhone))
                 .filter(phone -> (phone != null && !phone.isBlank()))
                 .collect(Collectors.toList());
@@ -98,12 +96,12 @@ public class AlertService {
 
     public List<ChildAlertDTO> toChildAlertByAddress(String address) {
 
-        List<Person> personList = personService.searchByAddress(address);
+        List<Person> personList = personService.findByAddress(address);
         List<ChildAlertDTO> children = new ArrayList<>();
         List<Person> family = new ArrayList<>();
         personList.forEach(p -> {
             CalculateAge calc = new CalculateAge();
-            MedicalRecord mr = medicalRecordService.getMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
+            MedicalRecord mr = medicalRecordService.findMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
             if (calc.calculateAge(mr.getBirthdate()) <= 18) {
                 children.add(mapperUtils.toChildAlertDTO(p, mr));
             } else {
@@ -116,29 +114,26 @@ public class AlertService {
         return children;
     }
 
-    public List<PersonInfoByStationDTO> toPersonInfoByStation(Integer station) {
+    public PersonInfoByStationAndCountDTO toPersonInfoByStation(Integer station) {
 
-        return fireStationService.getFireStationByStation(station).stream()
+        PersonInfoByStationAndCountDTO personCountDTO = new PersonInfoByStationAndCountDTO();
+        List<PersonInfoByStationDTO> personInfoDTO = fireStationService.findFireStationByStation(station).stream()
                 .map(FireStation::getAddress)
-                .flatMap(address -> personService.searchByAddress(address).stream()
+                .flatMap(address -> personService.findByAddress(address).stream()
                         .map(p -> {
                             {
-                                 CountDTO count = new CountDTO();
-                                 int child = 0;
-                                 int adult = 0;
-                                 CalculateAge calc = new CalculateAge();
-                                 MedicalRecord mr = medicalRecordService.getMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
-                                    if (calc.calculateAge(mr.getBirthdate()) <= 18){
-                                        child++;
-                                        count.setChild(count.getChild(child));
-
-                                    } else {
-                                        adult++;
-                                        count.setAdult(count.getAdult(adult));
-                                    }
+                                CalculateAge calc = new CalculateAge();
+                                MedicalRecord mr = medicalRecordService.findMedicalRecordsByFirstNameAndLastName(p.getFirstName(), p.getLastName());
+                                if (calc.calculateAge(mr.getBirthdate()) <= 18){
+                                    personCountDTO.setChild(personCountDTO.getChild() + 1);
+                                } else {
+                                    personCountDTO.setAdult(personCountDTO.getAdult() + 1);
+                                }
                                 return mapperUtils.toPersonInfoByStationDTO(p);
                             }
                         }))
                 .collect(Collectors.toList());
+        personCountDTO.setHousehold(personInfoDTO);
+        return personCountDTO;
     }
 }

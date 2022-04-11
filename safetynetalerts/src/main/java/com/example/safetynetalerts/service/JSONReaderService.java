@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +20,7 @@ import java.util.List;
 @Service
 public class JSONReaderService {
 
-    public JSONReaderService() {}
+    public JSONReaderService(ObjectMapper objectMapper) {}
 
     @Autowired
     private PersonRepository personRepository;

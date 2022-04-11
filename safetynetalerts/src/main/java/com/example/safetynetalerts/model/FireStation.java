@@ -1,8 +1,5 @@
 package com.example.safetynetalerts.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class FireStation {
 
     private String address;

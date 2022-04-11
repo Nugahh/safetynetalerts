@@ -5,7 +5,6 @@ import com.example.safetynetalerts.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,39 +18,31 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public List<Person> getPersons() {
+    public List<Person> getPersons() { // get list of Person
         return personRepository.findAll();
     }
 
-    public void deletePerson(String firstName, String lastName) {
+    public void deletePerson(String firstName, String lastName) { // delete person by firstName and firstName
         personRepository.deleteByFirstNameAndLastName(firstName, lastName);
     }
 
-    public Person addPerson(Person person){
+    public Person addPerson(Person person){ // add person to the list
         return personRepository.addPerson(person);
     }
 
-    public Person searchPerson(String firstName, String lastName) {
-        if (!firstName.isEmpty() && !lastName.isEmpty()) {
-            return personRepository.findByLastNameAndFirstName(lastName + firstName);
-        }
-        return null;
+    public Person updatePerson(Person personOld, String firstName, String lastName){ // update person by firstName and lastName
+       return personRepository.updatePerson(personOld, firstName, lastName);
     }
 
-    public List<Person> searchPersonByLastName(String lastName){
+    public List<Person> findPersonByLastName(String lastName){ // find person by last name
         return personRepository.findByLastName(lastName);
     }
 
-    public List<Person> searchEmailByCity(String city){
-       if (!city.isEmpty()) {
+    public List<Person> findEmailByCity(String city){ // find email by city
            return personRepository.findByCity(city);
-       }
-        return null;
     }
-    public List<Person> searchByAddress(String address){
-       if (!address.isEmpty()) {
+
+    public List<Person> findByAddress(String address){ // find person by address
            return personRepository.findByAddress(address);
-       }
-        return null;
     }
 }

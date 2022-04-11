@@ -1,4 +1,5 @@
 package com.example.safetynetalerts.repository;
+
 import com.example.safetynetalerts.model.MedicalRecord;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
@@ -9,25 +10,32 @@ public class MedicalRecordRepository {
 
     private List<MedicalRecord> medicalRecordList = new ArrayList<>();
 
+    public List<MedicalRecord> findAll() {
+        return this.medicalRecordList;
+    }
+
     public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord){
         this.medicalRecordList.add(medicalRecord);
         return medicalRecord;
     }
 
-    public MedicalRecord findByLastNameAndFirstName(String s) {
-        return this.medicalRecordList.stream()
-                .filter((p) -> (p.getLastName() + p.getFirstName()).equals(s)).findAny().orElseThrow();
+    public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecordOld, String firstName, String lastName){
+
+        MedicalRecord medicalRecordNew =  findByFirstNameAndLastName(firstName, lastName);
+        medicalRecordNew.setBirthdate(medicalRecordOld.getBirthdate());
+        medicalRecordNew.setMedications(medicalRecordOld.getMedications());
+        medicalRecordNew.setAllergies(medicalRecordOld.getAllergies());
+
+        return medicalRecordList.set(medicalRecordList.indexOf(findByFirstNameAndLastName(firstName, lastName)), medicalRecordNew);
     }
 
-    public List<MedicalRecord> findAll() {
-        return this.medicalRecordList;
+    public MedicalRecord findByFirstNameAndLastName(String firstName, String lastName) {
+        return this.medicalRecordList.stream()
+                .filter(medicalRecord -> (medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName))).findAny().orElseThrow();
     }
 
     public void deleteByFirstNameAndLastName(String firstName, String lastName) {
-        this.medicalRecordList.forEach((MedicalRecord medicalRecord) -> {
-            if((medicalRecord.getLastName().equals(lastName) && medicalRecord.getFirstName().equals(firstName))){
-                this.medicalRecordList.remove(medicalRecord);
-            }
-        });
+        this.medicalRecordList.removeIf(medicalRecord ->
+                medicalRecord.getFirstName().equals(firstName) && medicalRecord.getLastName().equals(lastName));
     }
 }
