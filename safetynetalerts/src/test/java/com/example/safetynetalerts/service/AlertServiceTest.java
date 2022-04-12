@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.safetynetalerts.DTO.FloodDTO;
+import com.example.safetynetalerts.DTO.PersonInfoByAddressDTO;
 import com.example.safetynetalerts.model.FireStation;
 import com.example.safetynetalerts.model.MedicalRecord;
 import com.example.safetynetalerts.model.Person;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+//@ContextConfiguration("/Data.json")
 @ContextConfiguration(classes = {AlertService.class})
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -48,38 +50,52 @@ class AlertServiceTest {
     private PersonService personService;
 
     @Test
-    void testToFlood() {
-        when(this.fireStationService.findFireStationByStations((List<Integer>) any())).thenReturn(new ArrayList<>());
-        assertTrue(this.alertService.toFlood(new ArrayList<>()).isEmpty());
-        verify(this.fireStationService).findFireStationByStations((List<Integer>) any());
+    void testToPersonInfoByAddress() {
+        when(personService.findByAddress(any())).thenReturn(new ArrayList<>());
+        assertTrue(alertService.toPersonInfoByAddress("42 Main St").isEmpty());
+        verify(personService).findByAddress(any());
     }
 
     @Test
-    void testToFlood2() {
-        when(this.personService.findByAddress(any())).thenReturn(new ArrayList<>());
+    void testToPersonInfoByAddress2() {
+        ArrayList<Person> personList = new ArrayList<>();
+        personList.add(new Person());
+        when(this.personService.findByAddress(any())).thenReturn(personList);
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setAllergies(new ArrayList<>());
+        medicalRecord.setBirthdate("2020-03-01");
+        medicalRecord.setFirstName("Jane");
+        medicalRecord.setLastName("Doe");
+        medicalRecord.setMedications(new ArrayList<>());
+        when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
+                .thenReturn(medicalRecord);
+
+        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
+        personInfoByAddressDTO.setAllergies(new ArrayList<>());
+        personInfoByAddressDTO.setBirthdate(1);
+        personInfoByAddressDTO.setLastName("Doe");
+        personInfoByAddressDTO.setMedications(new ArrayList<>());
+        personInfoByAddressDTO.setPhone("4105551212");
+        personInfoByAddressDTO.setStation(1);
+        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
+                .thenReturn(personInfoByAddressDTO);
 
         FireStation fireStation = new FireStation();
         fireStation.setAddress("42 Main St");
         fireStation.setStation(1);
-
-        ArrayList<FireStation> fireStationList = new ArrayList<>();
-        fireStationList.add(fireStation);
-        when(this.fireStationService.findFireStationByStations((List<Integer>) any())).thenReturn(fireStationList);
-        ArrayList<Integer> integerList = new ArrayList<>();
-        List<FloodDTO> actualToFloodResult = this.alertService.toFlood(integerList);
-        assertEquals(1, actualToFloodResult.size());
-        FloodDTO getResult = actualToFloodResult.get(0);
-        assertEquals("42 Main St", getResult.getAddress());
-        assertEquals(integerList, getResult.getPersons());
+        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
+        assertEquals(1, this.alertService.toPersonInfoByAddress("42 Main St").size());
         verify(this.personService).findByAddress((String) any());
-        verify(this.fireStationService).findFireStationByStations((List<Integer>) any());
+        verify(this.medicalRecordService).findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any());
+        verify(this.mapperUtils).toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any());
+        verify(this.fireStationService).findFireStationByAddressList((String) any());
     }
 
     @Test
-    @Disabled("TODO: Complete this test")
-    void testToFlood3() {
-        // TODO: Complete this test.
+    void testToPersonInfoByAddress3() {
         ArrayList<Person> personList = new ArrayList<>();
+        personList.add(new Person());
         personList.add(new Person());
         when(this.personService.findByAddress((String) any())).thenReturn(personList);
 
@@ -92,20 +108,32 @@ class AlertServiceTest {
         when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
                 .thenReturn(medicalRecord);
 
+        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
+        personInfoByAddressDTO.setAllergies(new ArrayList<>());
+        personInfoByAddressDTO.setBirthdate(1);
+        personInfoByAddressDTO.setLastName("Doe");
+        personInfoByAddressDTO.setMedications(new ArrayList<>());
+        personInfoByAddressDTO.setPhone("4105551212");
+        personInfoByAddressDTO.setStation(1);
+        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
+                .thenReturn(personInfoByAddressDTO);
+
         FireStation fireStation = new FireStation();
         fireStation.setAddress("42 Main St");
         fireStation.setStation(1);
-
-        ArrayList<FireStation> fireStationList = new ArrayList<>();
-        fireStationList.add(fireStation);
-        when(this.fireStationService.findFireStationByStations((List<Integer>) any())).thenReturn(fireStationList);
-        this.alertService.toFlood(new ArrayList<>());
+        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
+        assertEquals(2, this.alertService.toPersonInfoByAddress("42 Main St").size());
+        verify(this.personService).findByAddress((String) any());
+        verify(this.medicalRecordService, atLeast(1)).findMedicalRecordsByFirstNameAndLastName((String) any(),
+                (String) any());
+        verify(this.mapperUtils, atLeast(1)).toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(),
+                (FireStation) any());
+        verify(this.fireStationService, atLeast(1)).findFireStationByAddressList((String) any());
     }
 
     @Test
     @Disabled("TODO: Complete this test")
-    void testToFlood4() {
-        // TODO: Complete this test.
+    void testToPersonInfoByAddress4() {
 
         ArrayList<Person> personList = new ArrayList<>();
         personList.add(null);
@@ -120,43 +148,22 @@ class AlertServiceTest {
         when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
                 .thenReturn(medicalRecord);
 
-        FireStation fireStation = new FireStation();
-        fireStation.setAddress("42 Main St");
-        fireStation.setStation(1);
-
-        ArrayList<FireStation> fireStationList = new ArrayList<>();
-        fireStationList.add(fireStation);
-        when(this.fireStationService.findFireStationByStations((List<Integer>) any())).thenReturn(fireStationList);
-        this.alertService.toFlood(new ArrayList<>());
-    }
-
-    @Test
-    void testToFlood5() {
-        when(this.personService.findByAddress((String) any())).thenReturn(new ArrayList<>());
+        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
+        personInfoByAddressDTO.setAllergies(new ArrayList<>());
+        personInfoByAddressDTO.setBirthdate(1);
+        personInfoByAddressDTO.setLastName("Doe");
+        personInfoByAddressDTO.setMedications(new ArrayList<>());
+        personInfoByAddressDTO.setPhone("4105551212");
+        personInfoByAddressDTO.setStation(1);
+        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
+                .thenReturn(personInfoByAddressDTO);
 
         FireStation fireStation = new FireStation();
         fireStation.setAddress("42 Main St");
         fireStation.setStation(1);
-
-        FireStation fireStation1 = new FireStation();
-        fireStation1.setAddress("42 Main St");
-        fireStation1.setStation(1);
-
-        ArrayList<FireStation> fireStationList = new ArrayList<>();
-        fireStationList.add(fireStation1);
-        fireStationList.add(fireStation);
-        when(this.fireStationService.findFireStationByStations((List<Integer>) any())).thenReturn(fireStationList);
-        ArrayList<Integer> integerList = new ArrayList<>();
-        List<FloodDTO> actualToFloodResult = this.alertService.toFlood(integerList);
-        assertEquals(2, actualToFloodResult.size());
-        FloodDTO getResult = actualToFloodResult.get(0);
-        assertEquals(integerList, getResult.getPersons());
-        FloodDTO getResult1 = actualToFloodResult.get(1);
-        assertEquals(integerList, getResult1.getPersons());
-        assertEquals("42 Main St", getResult1.getAddress());
-        assertEquals("42 Main St", getResult.getAddress());
-        verify(this.personService, atLeast(1)).findByAddress((String) any());
-        verify(this.fireStationService).findFireStationByStations((List<Integer>) any());
+        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
+        this.alertService.toPersonInfoByAddress("42 Main St");
     }
+
 }
 
