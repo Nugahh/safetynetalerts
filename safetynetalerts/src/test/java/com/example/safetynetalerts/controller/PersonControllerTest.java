@@ -11,6 +11,7 @@ import com.example.safetynetalerts.service.PersonService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,9 +41,6 @@ class PersonControllerTest {
     @Autowired
     private PersonController personController;
 
-    @Autowired
-    private MockMvc mvc;
-
     @MockBean
     private PersonService personService;
 
@@ -60,18 +58,21 @@ class PersonControllerTest {
 
     @Test
     void testAddPerson() throws Exception {
-        when(this.personService.addPerson(any(Person.class))).thenReturn(new Person());
-
+        // Given
         Person person = new Person();
-        person.setAddress("42 John St");
-        person.setCity("Paris");
-        person.setEmail("123@gmail.com");
         person.setFirstName("John");
         person.setLastName("Doe");
-        person.setPhone("4105551212");
+        person.setAddress("42 John St");
+        person.setCity("Paris");
         person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.addPerson(any(Person.class))).thenReturn(person);
+
+        // Then
         String content = (new ObjectMapper()).writeValueAsString(person);
-        logger.error(person);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/person")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content);
@@ -81,7 +82,122 @@ class PersonControllerTest {
         actualPerformResult.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"firstName\":null,\"lastName\":null,\"address\":null,\"city\":null,\"zip\":null,\"phone\":null,\"email\":null}"));
+                        .string("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"address\":\"42 John St\",\"city\":\"Paris\",\"zip\":\"21654\",\"phone\":\"4105551212\",\"email\":\"123@gmail.com\"}"));
+    }
+
+    @Test
+    void testUpdatePerson() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", "John")
+                .param("lastName", "Doe")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content()
+                        .string("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"address\":\"32 John St\",\"city\":\"New York\",\"zip\":\"21654\",\"phone\":\"4105551212\",\"email\":\"123@gmail.com\"}"));
+
+    }
+
+    @Test
+    void testUpdatePerson2() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        // Then
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", "")
+                .param("lastName", "Doe")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void testUpdatePerson3() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        // Then
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", "John")
+                .param("lastName", "")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void testUpdatePerson4() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        // Then
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", " ")
+                .param("lastName", " ")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

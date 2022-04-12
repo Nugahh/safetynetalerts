@@ -54,7 +54,6 @@ public class JSONReaderServiceTest {
     @Test
     void testLoadPersons() throws IOException {
         when(objectMapper.readTree(new FileInputStream(filePath))).thenThrow();
-//        verify()
     }
 
 
