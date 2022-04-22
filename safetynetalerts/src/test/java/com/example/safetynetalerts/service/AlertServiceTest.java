@@ -1,17 +1,21 @@
 package com.example.safetynetalerts.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.safetynetalerts.DTO.CommunityEmailDTO;
 import com.example.safetynetalerts.DTO.FloodDTO;
 import com.example.safetynetalerts.DTO.PersonInfoByAddressDTO;
+import com.example.safetynetalerts.DTO.PersonInfoByStationAndCountDTO;
+import com.example.safetynetalerts.DTO.PersonInfoDTO;
 import com.example.safetynetalerts.model.FireStation;
 import com.example.safetynetalerts.model.MedicalRecord;
 import com.example.safetynetalerts.model.Person;
+import com.example.safetynetalerts.utils.CalculateAge;
 import com.example.safetynetalerts.utils.MapperUtils;
 
 import java.util.ArrayList;
@@ -34,136 +38,108 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(MockitoExtension.class)
 class AlertServiceTest {
 
-    @Autowired
+    @MockBean
     private MapperUtils mapperUtils;
 
     @Autowired
     private AlertService alertService;
 
-    @Autowired
+    @MockBean
     private FireStationService fireStationService;
 
-    @Autowired
+    @MockBean
     private MedicalRecordService medicalRecordService;
 
-    @Autowired
+    @MockBean
     private PersonService personService;
 
+    @MockBean
+    private CalculateAge calculateAge;
+
+   /* @Test
+    void toPersonInfoTest() {
+        ArrayList<Person> personList = new ArrayList<>();
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        personList.add(person);
+        when(personService.findPersonByLastName(any())).thenReturn(personList);
+
+        PersonInfoDTO personInfoDTO = new PersonInfoDTO();
+        personInfoDTO.setFirstName(person.getFirstName());
+        when(mapperUtils.toPersonDTO(any(), any())).thenReturn(personInfoDTO);
+
+        assertEquals(0, alertService.toPersonInfo(any(), any()).size());
+
+    }
+*/
+
     @Test
-    void testToPersonInfoByAddress() {
-        when(personService.findByAddress(any())).thenReturn(new ArrayList<>());
-        assertTrue(alertService.toPersonInfoByAddress("42 Main St").isEmpty());
+    void toPhoneAlertTest() {
+        ArrayList<FireStation> fireStationList = new ArrayList<>();
+        fireStationList.add(new FireStation());
+        when(fireStationService.findFireStationByStation(any())).thenReturn(fireStationList);
+
+        Person person = new Person();
+        person.setPhone("1234");
+        ArrayList<Person> personList = new ArrayList<>();
+        personList.add(person);
+        when(personService.findByAddress(any())).thenReturn(personList);
+
+        assertEquals(1, alertService.toPhoneAlert(any()).size());
+        verify(fireStationService).findFireStationByStation(any());
         verify(personService).findByAddress(any());
     }
 
     @Test
-    void testToPersonInfoByAddress2() {
+    void toPhoneAlertPhoneBlankTest() {
+        ArrayList<FireStation> fireStationList = new ArrayList<>();
+        fireStationList.add(new FireStation());
+        when(fireStationService.findFireStationByStation(any())).thenReturn(fireStationList);
+
+        Person person = new Person();
+        person.setPhone("");
         ArrayList<Person> personList = new ArrayList<>();
-        personList.add(new Person());
-        when(this.personService.findByAddress(any())).thenReturn(personList);
+        personList.add(person);
+        when(personService.findByAddress(any())).thenReturn(personList);
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setAllergies(new ArrayList<>());
-        medicalRecord.setBirthdate("2020-03-01");
-        medicalRecord.setFirstName("Jane");
-        medicalRecord.setLastName("Doe");
-        medicalRecord.setMedications(new ArrayList<>());
-        when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
-                .thenReturn(medicalRecord);
-
-        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
-        personInfoByAddressDTO.setAllergies(new ArrayList<>());
-        personInfoByAddressDTO.setBirthdate(1);
-        personInfoByAddressDTO.setLastName("Doe");
-        personInfoByAddressDTO.setMedications(new ArrayList<>());
-        personInfoByAddressDTO.setPhone("4105551212");
-        personInfoByAddressDTO.setStation(1);
-        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
-                .thenReturn(personInfoByAddressDTO);
-
-        FireStation fireStation = new FireStation();
-        fireStation.setAddress("42 Main St");
-        fireStation.setStation(1);
-        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
-        assertEquals(1, this.alertService.toPersonInfoByAddress("42 Main St").size());
-        verify(this.personService).findByAddress((String) any());
-        verify(this.medicalRecordService).findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any());
-        verify(this.mapperUtils).toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any());
-        verify(this.fireStationService).findFireStationByAddressList((String) any());
+        assertEquals(0, alertService.toPhoneAlert(any()).size());
+        verify(fireStationService).findFireStationByStation(any());
+        verify(personService).findByAddress(any());
     }
 
     @Test
-    void testToPersonInfoByAddress3() {
+    void toPhoneAlertPhoneNullTest() {
+        ArrayList<FireStation> fireStationList = new ArrayList<>();
+        fireStationList.add(new FireStation());
+        when(fireStationService.findFireStationByStation(any())).thenReturn(fireStationList);
+
+        Person person = new Person();
+        person.setPhone(null);
         ArrayList<Person> personList = new ArrayList<>();
-        personList.add(new Person());
-        personList.add(new Person());
-        when(this.personService.findByAddress((String) any())).thenReturn(personList);
+        personList.add(person);
+        when(personService.findByAddress(any())).thenReturn(personList);
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setAllergies(new ArrayList<>());
-        medicalRecord.setBirthdate("2020-03-01");
-        medicalRecord.setFirstName("Jane");
-        medicalRecord.setLastName("Doe");
-        medicalRecord.setMedications(new ArrayList<>());
-        when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
-                .thenReturn(medicalRecord);
-
-        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
-        personInfoByAddressDTO.setAllergies(new ArrayList<>());
-        personInfoByAddressDTO.setBirthdate(1);
-        personInfoByAddressDTO.setLastName("Doe");
-        personInfoByAddressDTO.setMedications(new ArrayList<>());
-        personInfoByAddressDTO.setPhone("4105551212");
-        personInfoByAddressDTO.setStation(1);
-        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
-                .thenReturn(personInfoByAddressDTO);
-
-        FireStation fireStation = new FireStation();
-        fireStation.setAddress("42 Main St");
-        fireStation.setStation(1);
-        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
-        assertEquals(2, this.alertService.toPersonInfoByAddress("42 Main St").size());
-        verify(this.personService).findByAddress((String) any());
-        verify(this.medicalRecordService, atLeast(1)).findMedicalRecordsByFirstNameAndLastName((String) any(),
-                (String) any());
-        verify(this.mapperUtils, atLeast(1)).toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(),
-                (FireStation) any());
-        verify(this.fireStationService, atLeast(1)).findFireStationByAddressList((String) any());
+        assertEquals(0, alertService.toPhoneAlert(any()).size());
+        verify(fireStationService).findFireStationByStation(any());
+        verify(personService).findByAddress(any());
     }
 
-    @Test
-    @Disabled("TODO: Complete this test")
-    void testToPersonInfoByAddress4() {
+    /*@Test
+    void testToPersonInfoByStation() {
+        PersonInfoByStationAndCountDTO personInfo = new PersonInfoByStationAndCountDTO();
+        ArrayList<FireStation> fireStationList = new ArrayList<>();
+        when(fireStationService.findFireStationByStation(any())).thenReturn(fireStationList);
 
-        ArrayList<Person> personList = new ArrayList<>();
-        personList.add(null);
-        when(this.personService.findByAddress((String) any())).thenReturn(personList);
+        when(calculateAge.calculateAge(any())).thenReturn(15);
+        when(calculateAge.calculateAge(any())).thenReturn(19);
 
-        MedicalRecord medicalRecord = new MedicalRecord();
-        medicalRecord.setAllergies(new ArrayList<>());
-        medicalRecord.setBirthdate("2020-03-01");
-        medicalRecord.setFirstName("Jane");
-        medicalRecord.setLastName("Doe");
-        medicalRecord.setMedications(new ArrayList<>());
-        when(this.medicalRecordService.findMedicalRecordsByFirstNameAndLastName((String) any(), (String) any()))
-                .thenReturn(medicalRecord);
 
-        PersonInfoByAddressDTO personInfoByAddressDTO = new PersonInfoByAddressDTO();
-        personInfoByAddressDTO.setAllergies(new ArrayList<>());
-        personInfoByAddressDTO.setBirthdate(1);
-        personInfoByAddressDTO.setLastName("Doe");
-        personInfoByAddressDTO.setMedications(new ArrayList<>());
-        personInfoByAddressDTO.setPhone("4105551212");
-        personInfoByAddressDTO.setStation(1);
-        when(this.mapperUtils.toPersonInfoByAddressDTO((Person) any(), (MedicalRecord) any(), (FireStation) any()))
-                .thenReturn(personInfoByAddressDTO);
-
-        FireStation fireStation = new FireStation();
-        fireStation.setAddress("42 Main St");
-        fireStation.setStation(1);
-        when(this.fireStationService.findFireStationByAddressList((String) any())).thenReturn(fireStation);
-        this.alertService.toPersonInfoByAddress("42 Main St");
-    }
-
+        PersonInfoByStationAndCountDTO personInfoByStation = alertService.toPersonInfoByStation(any());
+        assertEquals(1, personInfoByStation.getAdult().intValue());
+        assertEquals(fireStationList, personInfoByStation.getHousehold());
+        assertEquals(1, personInfoByStation.getChild().intValue());
+        verify(fireStationService).findFireStationByStation((Integer) any());
+    }*/
 }
 

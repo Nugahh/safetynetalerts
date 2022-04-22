@@ -103,15 +103,6 @@ public class AlertControllerTest {
     }
 
     @Test
-    void getEmailWithoutCityTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", "");
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(alertController)
-                .build()
-                .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
     void getEmailIsEmptyTest() throws Exception {
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", " ");
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(alertController)

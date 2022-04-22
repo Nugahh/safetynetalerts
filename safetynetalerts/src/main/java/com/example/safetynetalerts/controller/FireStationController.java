@@ -42,7 +42,7 @@ public class FireStationController {
 
     @DeleteMapping(value = "/firestation")
     public ResponseEntity deleteFireStation(@RequestParam String address, Integer station) {
-        if ((address.isBlank() || address.isEmpty()) && station == null){
+        if (address.isBlank() && station == null){
             logger.error("Address or station blank");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         } else if (address.isEmpty() || address.isBlank()){

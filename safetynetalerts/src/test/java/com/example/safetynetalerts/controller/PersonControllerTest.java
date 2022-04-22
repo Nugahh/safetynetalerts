@@ -45,7 +45,7 @@ class PersonControllerTest {
     private PersonService personService;
 
     @Test
-    void testGetPersons() throws Exception {
+    void getPersonTest() throws Exception {
         when(this.personService.getPersons()).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/person");
         MockMvcBuilders.standaloneSetup(personController)
@@ -57,7 +57,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void testAddPerson() throws Exception {
+    void addPersonTest() throws Exception {
         // Given
         Person person = new Person();
         person.setFirstName("John");
@@ -82,11 +82,19 @@ class PersonControllerTest {
         actualPerformResult.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"address\":\"42 John St\",\"city\":\"Paris\",\"zip\":\"21654\",\"phone\":\"4105551212\",\"email\":\"123@gmail.com\"}"));
+                        .string("{\"" +
+                                "firstName\":\"John\"," +
+                                "\"lastName\":\"Doe\"," +
+                                "\"address\":\"42 John St\"," +
+                                "\"city\":\"Paris\"," +
+                                "\"zip\":\"21654\"," +
+                                "\"phone\":\"4105551212\"," +
+                                "\"email\":\"123@gmail.com\"" +
+                                "}"));
     }
 
     @Test
-    void testUpdatePerson() throws Exception {
+    void updatePersonTest() throws Exception {
         // Given
         Person person = new Person();
         person.setFirstName("John");
@@ -112,12 +120,75 @@ class PersonControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
                 .andExpect(MockMvcResultMatchers.content()
-                        .string("{\"firstName\":\"John\",\"lastName\":\"Doe\",\"address\":\"32 John St\",\"city\":\"New York\",\"zip\":\"21654\",\"phone\":\"4105551212\",\"email\":\"123@gmail.com\"}"));
-
+                        .string("{\"" +
+                                "firstName\":\"John\"," +
+                                "\"lastName\":\"Doe\"," +
+                                "\"address\":\"32 John St\"," +
+                                "\"city\":\"New York\"," +
+                                "\"zip\":\"21654\"," +
+                                "\"phone\":\"4105551212\"," +
+                                "\"email\":\"123@gmail.com\"" +
+                                "}"));
     }
 
     @Test
-    void testUpdatePerson2() throws Exception {
+    void updatePersonFirstNameBlankTest() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        // Then
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", " ")
+                .param("lastName", "Doe")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void updatePersonLastNameBlankTest() throws Exception {
+        // Given
+        Person person = new Person();
+        person.setFirstName("John");
+        person.setLastName("Doe");
+        person.setAddress("32 John St");
+        person.setCity("New York");
+        person.setZip("21654");
+        person.setPhone("4105551212");
+        person.setEmail("123@gmail.com");
+
+        // When
+        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
+
+        // Then
+        String content = (new ObjectMapper()).writeValueAsString(person);
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
+                .param("firstName", "John")
+                .param("lastName", " ")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content);
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void updatePersonFirstNameEmptyTest() throws Exception {
         // Given
         Person person = new Person();
         person.setFirstName("John");
@@ -145,7 +216,7 @@ class PersonControllerTest {
     }
 
     @Test
-    void testUpdatePerson3() throws Exception {
+    void updatePersonLastNameEmptyTest() throws Exception {
         // Given
         Person person = new Person();
         person.setFirstName("John");
@@ -173,39 +244,11 @@ class PersonControllerTest {
     }
 
     @Test
-    void testUpdatePerson4() throws Exception {
-        // Given
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Doe");
-        person.setAddress("32 John St");
-        person.setCity("New York");
-        person.setZip("21654");
-        person.setPhone("4105551212");
-        person.setEmail("123@gmail.com");
-
-        // When
-        when(this.personService.updatePerson(any(), any(), any())).thenReturn(person);
-
-        // Then
-        String content = (new ObjectMapper()).writeValueAsString(person);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.put("/person")
-                .param("firstName", " ")
-                .param("lastName", " ")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.personController)
-                .build()
-                .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    void testDeletePerson() throws Exception {
+    void deletePersonTest() throws Exception {
         doNothing().when(personService).deletePerson(any(String.class), any(String.class));
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/person")
-                .param("firstName", "foo")
-                .param("lastName", "foo");
+                .param("firstName", "John")
+                .param("lastName", "Doe");
         MockMvcBuilders.standaloneSetup(personController)
                 .build()
                 .perform(requestBuilder)
@@ -213,11 +256,11 @@ class PersonControllerTest {
     }
 
     @Test
-    void testDeletePerson2() throws Exception {
+    void deletePersonFirstNameBlankTest() throws Exception {
         doNothing().when(personService).deletePerson(any(String.class), any(String.class));
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/person")
-                .param("firstName", "")
-                .param("lastName", "foo");
+                .param("firstName", " ")
+                .param("lastName", "Doe");
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(personController)
                 .build()
                 .perform(requestBuilder);
@@ -225,10 +268,34 @@ class PersonControllerTest {
     }
 
     @Test
-    void testDeletePerson3() throws Exception {
+    void deletePersonLastNameBlankTest() throws Exception {
         doNothing().when(personService).deletePerson(any(String.class), any(String.class));
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/person")
-                .param("firstName", "foo")
+                .param("firstName", "John")
+                .param("lastName", " ");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deletePersonFirstNameEmptyTest() throws Exception {
+        doNothing().when(personService).deletePerson(any(String.class), any(String.class));
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/person")
+                .param("firstName", "")
+                .param("lastName", "Doe");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(personController)
+                .build()
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deletePersonLastNameEmptyTest() throws Exception {
+        doNothing().when(personService).deletePerson(any(String.class), any(String.class));
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.delete("/person")
+                .param("firstName", "John")
                 .param("lastName", "");
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(personController)
                 .build()

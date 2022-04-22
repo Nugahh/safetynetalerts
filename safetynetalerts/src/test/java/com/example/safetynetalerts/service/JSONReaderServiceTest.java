@@ -18,20 +18,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static com.google.inject.matcher.Matchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.times;
+
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -46,23 +38,27 @@ public class JSONReaderServiceTest {
     @Autowired
     private JSONReaderService jsonReaderService;
 
-    @BeforeEach
-    void setUp() {
-        jsonReaderService = new JSONReaderService(objectMapper);
+ /*   @Test
+    void loadPersonsTest() {
+
+        String jsonString = "{ \"id\" : \n" +
+                "      {\n" +
+                "         \"firstName\": \"something\",\n" +
+                "         \"lastName\" : \"something\"\n" +
+                "      }\n" +
+                "}";
+    }
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.readTree(jsonString);
+    }*/
+
+
+ /*   @AfterEach
+    void cleanUp() {
+        personList.clear();
     }
 
     @Test
-    void testLoadPersons() throws IOException {
-        when(objectMapper.readTree(new FileInputStream(filePath))).thenThrow();
-    }
-
-
-    /*@AfterEach
-    void cleanUp() {
-        personList.clear();
-    }*/
-
-   /* @Test
     void loadPersonsTest() throws IOException {
         JsonNode node = objectMapper.readTree(new FileInputStream(filePath));
         assertNotNull(jsonReaderService.loadPersons(node));

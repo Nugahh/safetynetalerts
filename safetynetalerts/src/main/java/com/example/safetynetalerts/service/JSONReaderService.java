@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class JSONReaderService {
 
-    public JSONReaderService(ObjectMapper objectMapper) {}
+    public JSONReaderService() {}
 
     @Autowired
     private PersonRepository personRepository;

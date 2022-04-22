@@ -65,9 +65,4 @@ public class Person {
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    public Person clone() throws CloneNotSupportedException {
-
-        return (Person) super.clone();
-    }
 }
