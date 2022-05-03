@@ -1,31 +1,17 @@
 package com.example.safetynetalerts.service;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.safetynetalerts.DTO.CommunityEmailDTO;
-import com.example.safetynetalerts.DTO.FloodDTO;
-import com.example.safetynetalerts.DTO.PersonInfoByAddressDTO;
-import com.example.safetynetalerts.DTO.PersonInfoByStationAndCountDTO;
-import com.example.safetynetalerts.DTO.PersonInfoDTO;
 import com.example.safetynetalerts.model.FireStation;
-import com.example.safetynetalerts.model.MedicalRecord;
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.utils.CalculateAge;
 import com.example.safetynetalerts.utils.MapperUtils;
-
 import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;

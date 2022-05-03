@@ -25,6 +25,7 @@ public class FireStationService {
     public void deleteFireStationByAddress(String address) {
         fireStationRepository.deleteByAddress(address);
     }
+
     public void deleteFireStationByStation(Integer station) {
         fireStationRepository.deleteByStation(station);
     }

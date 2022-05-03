@@ -43,7 +43,7 @@ public class JSONReaderService {
             loadMedical(node);
     }
 
-    public void loadPersons(JsonNode node) throws IOException {
+    public void loadPersons(JsonNode node) {
         JsonNode persons = node.path("persons");
 
         for (JsonNode nodePerson : persons) {

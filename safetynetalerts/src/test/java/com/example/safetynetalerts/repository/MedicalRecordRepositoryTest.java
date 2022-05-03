@@ -1,30 +1,17 @@
 package com.example.safetynetalerts.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.client.ExpectedCount.times;
-
 import com.example.safetynetalerts.model.MedicalRecord;
-
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
-
-import com.example.safetynetalerts.utils.CalculateAge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 class MedicalRecordRepositoryTest {
 
-    private MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
+    private final MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
 
     @Test
     @DisplayName("Given old MedicalRecord and new MedicalRecord, when updateMedicalRecord, then new MedicalRecord replace old MedicalRecord")

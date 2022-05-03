@@ -8,24 +8,15 @@ import com.example.safetynetalerts.model.FireStation;
 import com.example.safetynetalerts.model.Person;
 import com.example.safetynetalerts.service.AlertService;
 import com.example.safetynetalerts.service.FireStationService;
-import com.example.safetynetalerts.service.JSONReaderService;
 import com.example.safetynetalerts.service.PersonService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -93,18 +84,17 @@ public class AlertControllerTest {
     }
 
     @Test
-    void getEmailByCityTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", "Culver");
-        MockMvcBuilders.standaloneSetup(alertController)
+    void getEmailIsBlankTest() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", " ");
+        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(alertController)
                 .build()
-                .perform(requestBuilder)
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+                .perform(requestBuilder);
+        actualPerformResult.andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void getEmailIsEmptyTest() throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", " ");
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/communityEmail").param("city", "");
         ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(alertController)
                 .build()
                 .perform(requestBuilder);

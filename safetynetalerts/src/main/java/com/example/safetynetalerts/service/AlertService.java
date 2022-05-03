@@ -29,8 +29,6 @@ public class AlertService {
     @Autowired
     private MapperUtils mapperUtils;
 
-    private static final Logger LOGGER = LogManager.getLogger(AlertService.class);
-
     public List<PersonInfoDTO> toPersonInfo(String firstName, String lastName) {
 
         return personService.findPersonByLastName(lastName).stream()
@@ -42,7 +40,6 @@ public class AlertService {
                     }
                     return personInfoDTOList;
                 }).collect(Collectors.toList());
-
     }
 
     public List<CommunityEmailDTO> toCommunityEmail(String city) {
@@ -108,9 +105,7 @@ public class AlertService {
                 family.add(p);
             }
         });
-        children.forEach(p -> {
-            p.setFamily(family);
-        });
+        children.forEach(p -> p.setFamily(family));
         return children;
     }
 

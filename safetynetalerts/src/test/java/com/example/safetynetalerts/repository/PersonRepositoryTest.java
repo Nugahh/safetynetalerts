@@ -1,61 +1,21 @@
 package com.example.safetynetalerts.repository;
 
 import com.example.safetynetalerts.model.Person;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PersonRepositoryTest {
 
-    private PersonRepository personRepository = new PersonRepository();
-
-   /* @BeforeEach
-    void setUp() {
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Doe");
-        person.setAddress("135 John street");
-        person.setCity("Paris");
-        person.setZip("75000");
-        person.setPhone("0611223344");
-        person.setEmail("john.doe@gmail.com");
-        personList = new ArrayList<>();
-        personList.add(person);
-    }*/
-
-  /*  @AfterEach
-    void cleanUp() {
-        personList.clear();
-    }
-*/
-    /*@Test
-    public void testAddPerson() {
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Doe");
-        person.setAddress("135 John street");
-        person.setCity("Paris");
-        person.setZip("75000");
-        person.setPhone("0611223344");
-        person.setEmail("john.doe@gmail.com");
-        personRepository.addPerson(person);
-        assertEquals(person, personRepository.findByFirstNameAndLastName("John", "Doe"));
-        assertNotNull(personRepository.addPerson(person));
-    }*/
+    private final PersonRepository personRepository = new PersonRepository();
 
     @Test
     @DisplayName("Given new person, when delete by firstname and lastname, then person deleted")
