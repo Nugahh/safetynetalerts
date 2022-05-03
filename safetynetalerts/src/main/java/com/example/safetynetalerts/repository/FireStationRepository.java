@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 @Repository
 public class FireStationRepository{
 
-    private List<FireStation> fireStationList = new ArrayList<>();
+    private final List<FireStation> fireStationList = new ArrayList<>();
 
     public List<FireStation> findAll() {
         return this.fireStationList;
